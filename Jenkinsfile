@@ -7,18 +7,39 @@ pipeline {
       }
     }
 
-    stage('Build Web App') {
-      steps {
-        echo 'Build Web App'
-        withMaven(maven: 'Maven3.6.3') {
-          sh 'mvn compile'
+  stage('Build Artifact'){
+            steps{
+                sh 'mvn clean install -f pom.xml'
+            }
+            
         }
-
-      }
-    }
-
-  }
-  environment {
-    SONAR_CREDS = credentials('sonar-user-pass')
+        
+        stage('Upload-to-Artifactory'){
+            steps{
+                
+                rtUpload (
+                    serverId: 'artifactory',
+                    spec: """{
+                            "files": [
+                                    {
+                                        "pattern": "target/*.war",
+                                        "target": "libs-release-local"
+                                    }
+                                ]
+                            }"""
+                )
+                
+                rtPublishBuildInfo (
+                    serverId: 'artifactory'
+                )
+            }
+        }
+        
+        stage('Deploy-to-QA'){
+            steps{
+                deploy adapters: [tomcat8(credentialsId: 'tomcat', path: '', url: 'http://18.220.112.107:8080')], contextPath: '/QAWebapp', onFailure: false, war: '**/*.war'
+            }
+            
+        }
   }
 }
