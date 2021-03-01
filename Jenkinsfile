@@ -12,7 +12,7 @@ pipeline {
         sh 'echo "Squad #8 Pipeline"'
       }
     }
-    stage('SourceCode-Checkhout') {
+    stage('SourceCode-Checkout') {
       steps {
         checkout([$class: 'GitSCM', branches: [
           [name: '*/master']
