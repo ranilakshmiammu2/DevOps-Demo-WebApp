@@ -77,7 +77,9 @@ pipeline {
 
   stage('Performance-Test') {
     steps {
-      sh 'echo "Squad #8 Pipeline performance test"'
+      blazeMeterTest credentialsId: 'blazemeter', testId: ' 9106025.taurus', workspaceId: '755162'
+    }
+
     }
   }
 
