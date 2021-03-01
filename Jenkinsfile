@@ -41,15 +41,13 @@ pipeline {
 
         rtUpload(
           serverId: 'artifactory',
-          spec: ""
-          "{
+          spec: """{
           "files": [{
             "pattern": "target/*.war",
             "target": "libs-release-local"
           }]
         }
-        ""
-        "
+        """
       )
 
       rtPublishBuildInfo(
